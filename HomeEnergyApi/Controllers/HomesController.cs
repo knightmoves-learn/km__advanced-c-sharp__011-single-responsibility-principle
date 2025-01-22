@@ -7,72 +7,65 @@ namespace HomeEnergyUsageApi.Controllers
     [Route("[controller]")]
     public class HomesController : ControllerBase
     {
-        private static HomeRepository repository = new HomeRepository();
+        private static List<Home> homesList = new List<Home>();
 
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(repository.FindAll());
+            return Ok(homesList);
         }
 
         [HttpGet("{id}")]
         public IActionResult FindById(int id)
+
         {
-            if (id > (repository.FindAll().Count - 1))
+            Home foundHome = homesList[id];
+            if (foundHome != null)
+            {
+                return Ok(homesList[id]);
+            }
+            else
             {
                 return NotFound();
             }
-            var home = repository.FindById(id);
-
-            return Ok(home);
         }
 
         [HttpPost]
         public IActionResult CreateHome([FromBody] Home home)
         {
-            repository.Save(home);
-            return Created($"/Homes/{repository.FindAll().Count - 1}", home);
+            homesList.Add(home);
+            return Created($"/Homes/{homesList.Count - 1}", home);
         }
 
         [HttpPut("{id}")]
         public IActionResult UpdateHome([FromBody] Home newHome, [FromRoute] int id)
         {
-            if (id > (repository.FindAll().Count - 1))
+            Home homeToUpdate = homesList[id];
+            if (homeToUpdate != null)
+            {
+                homesList[id] = newHome;
+                return Ok(homesList[id]);
+            }
+            else
             {
                 return NotFound();
             }
-            repository.Update(id, newHome);
-            return Ok(newHome);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteHome(int id)
         {
-            if (id > (repository.FindAll().Count - 1))
+            Home homeToDelete = homesList[id];
+
+            if (homeToDelete != null)
+            {
+                homesList.Remove(homeToDelete);
+                return Ok(homeToDelete);
+            }
+            else
             {
                 return NotFound();
             }
-            var home = repository.RemoveById(id);
-            return Ok(home);
         }
-
-        [HttpGet("HackAPI")]
-        public IActionResult Hack()
-        {
-            try
-            {
-                throw new Exception("Please don't try to hack me...");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Status = 500,
-                    Error = "Internal Server Error",
-                    Message = ex.Message
-                });
-            }
-        }
-
     }
 }
