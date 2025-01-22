@@ -9,6 +9,7 @@
 In this assignment you refactor HomeEnergyApi to apply the Single Responsibility Principle to your code.
 
 In `HomeEnergyApi/Models/HomeRepository.cs`...
+
 - Create a new class `HomeRepository` containing...
   - A public list of `Home`s titled `HomesList`
   - A constructor, which initializes `HomesList`
@@ -29,7 +30,9 @@ In `HomeEnergyApi/Models/HomeRepository.cs`...
     - Should take one `int` as an argument.
     - Should remove the home in `HomesList` at the index that is passed.
     - Should return the passed `Home`.
+
 In `HomeEnergyApi/Controllers/HomesController.cs`...
+
 - Should remove the definition for the property `homesList`.
 - Should create a definition for a new property of type `HomeRepository`.
 - Should refactor ALL existing methods to work in the same way as before, utilizing your new `HomeRepository` typed variable in line with the Single Responsibility Principle.
